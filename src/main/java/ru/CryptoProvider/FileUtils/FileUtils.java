@@ -19,5 +19,22 @@ public class FileUtils {
         int result = chooser.showSaveDialog(null);
         return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile() : null;
     }
+
+    public static File[] selectMultipleFiles(String dialogTitle) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(dialogTitle);
+        chooser.setMultiSelectionEnabled(true); // Включение множественного выбора
+        int result = chooser.showOpenDialog(null);
+        return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFiles() : null;
+    }
+    public static File selectFolder(String dialogTitle) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(dialogTitle);
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int result = chooser.showOpenDialog(null);
+        return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile() : null;
+    }
+
+
 }
 

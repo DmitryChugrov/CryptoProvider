@@ -61,7 +61,7 @@ public class MouseTrackerWindow extends JFrame implements MouseMotionListener {
             progressBar.setValue(progress);
 
             if (progress >= 100) {
-                JOptionPane.showMessageDialog(this, "Mouse Tracking Complete!", "Info", JOptionPane.INFORMATION_MESSAGE);
+//                JOptionPane.showMessageDialog(this, "Mouse Tracking Complete!", "Info", JOptionPane.INFORMATION_MESSAGE);
                 break;
             }
 
