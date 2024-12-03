@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 public class MainApp {
     public static void main(String[] args) {
         
-        JFrame mainFrame = new JFrame("Mouse Tracker Launcher");
+        JFrame mainFrame = new JFrame("Криптопровайдер");
         mainFrame.setSize(400, 300);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);

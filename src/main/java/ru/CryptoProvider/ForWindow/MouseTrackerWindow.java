@@ -13,7 +13,7 @@ public class MouseTrackerWindow extends JFrame implements MouseMotionListener {
 
     public MouseTrackerWindow() {
         
-        setTitle("Mouse Position Tracker");
+        setTitle("Генерация ключа");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
