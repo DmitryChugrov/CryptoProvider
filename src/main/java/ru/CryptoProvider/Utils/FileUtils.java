@@ -1,7 +1,10 @@
-package ru.CryptoProvider.FileUtils;
+package ru.CryptoProvider.Utils;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 public class FileUtils {
 
@@ -34,7 +37,12 @@ public class FileUtils {
         int result = chooser.showOpenDialog(null);
         return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile() : null;
     }
-
+    public static String readFileToString(File file, Charset charset) throws IOException {
+        if (file == null || !file.exists() || !file.isFile()) {
+            throw new IllegalArgumentException("Некорректный файл для чтения: " + file);
+        }
+        return Files.readString(file.toPath(), charset);
+    }
 
 }
 
