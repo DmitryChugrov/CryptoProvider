@@ -26,7 +26,7 @@ public class FileUtils {
     public static File[] selectMultipleFiles(String dialogTitle) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(dialogTitle);
-        chooser.setMultiSelectionEnabled(true); // Включение множественного выбора
+        chooser.setMultiSelectionEnabled(true);
         int result = chooser.showOpenDialog(null);
         return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFiles() : null;
     }

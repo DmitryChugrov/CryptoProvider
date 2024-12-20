@@ -12,7 +12,6 @@ public class AesEncryptionCBC {
     public static long encryptFileCBC(File inputFile, File outputFile, String key) throws Exception {
         byte[] fileData = Files.readAllBytes(inputFile.toPath());
 
-        // Генерация вектора инициализации (IV)
         byte[] iv = new byte[16];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(iv);
@@ -27,7 +26,6 @@ public class AesEncryptionCBC {
         long endTime = System.nanoTime();
 
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            // Сохраняем IV перед зашифрованными данными
             fos.write(iv);
             fos.write(encryptedData);
         }

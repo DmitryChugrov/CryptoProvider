@@ -15,7 +15,7 @@ public class MainApp extends Component {
     public void main() {
         
         JFrame mainFrame = new JFrame("Криптопровайдер");
-        mainFrame.setSize(400, 300);
+        mainFrame.setSize(430, 620);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
 
@@ -25,7 +25,7 @@ public class MainApp extends Component {
         mainFrame.add(panel);
 
         JButton conteinerButton = new JButton("Создание криптоконтейнера");
-        conteinerButton.setBounds(100, 30, 200, 50);
+        conteinerButton.setBounds(100, 30, 210, 40);
         panel.add(conteinerButton);
 
         conteinerButton.addActionListener(new ActionListener() {
@@ -33,7 +33,7 @@ public class MainApp extends Component {
             public void actionPerformed(ActionEvent e) {
 
                                                   SwingUtilities.invokeLater(() -> {
-                                                      // Запрос имени контейнера
+                                                      
                                                       String containerName = JOptionPane.showInputDialog(
                                                               MainApp.this,
                                                               "Введите имя для криптоконтейнера:",
@@ -55,7 +55,7 @@ public class MainApp extends Component {
                                                           return;
                                                       }
 
-                                                      // Создание панели для ввода пароля с кнопкой "Показать пароль"
+                                                      
                                                       JPanel passwordPanel = new JPanel(new BorderLayout());
                                                       JPasswordField passwordField = new JPasswordField(20);
                                                       JCheckBox showPasswordCheckbox = new JCheckBox("Показать пароль");
@@ -63,12 +63,12 @@ public class MainApp extends Component {
                                                       passwordPanel.add(passwordField, BorderLayout.CENTER);
                                                       passwordPanel.add(showPasswordCheckbox, BorderLayout.SOUTH);
 
-                                                      // Добавление функционала "Показать пароль"
+                                                      
                                                       showPasswordCheckbox.addActionListener(ev -> {
                                                           if (showPasswordCheckbox.isSelected()) {
-                                                              passwordField.setEchoChar((char) 0); // Отображать текст
+                                                              passwordField.setEchoChar((char) 0); 
                                                           } else {
-                                                              passwordField.setEchoChar('•'); // Скрывать текст
+                                                              passwordField.setEchoChar('•'); 
                                                           }
                                                       });
 
@@ -105,7 +105,7 @@ public class MainApp extends Component {
                                                           return;
                                                       }
 
-                                                      // Выбор папки для криптоконтейнера
+                                                      
                                                       File parentFolder = FileUtils.selectFolder("Выберите место для создания криптоконтейнера");
                                                       if (parentFolder == null) {
                                                           JOptionPane.showMessageDialog(
@@ -132,10 +132,10 @@ public class MainApp extends Component {
                                                           return;
                                                       }
 
-                                                      // Генерация ключа
+                                                      
                                                       String encryptionKey = KeyGeneratorUtils.generateKeyFromPassphrase(passphrase);
                                                       System.out.println(encryptionKey.length());
-                                                      // Создание файла pass.key
+                                                      
                                                       File keyFile = new File(containerFolder, "pass.key");
                                                       try (FileWriter writer = new FileWriter(keyFile)) {
                                                           writer.write(encryptionKey);
@@ -158,7 +158,7 @@ public class MainApp extends Component {
 
 
         JButton encryptionButton = new JButton("Шифрование");
-        encryptionButton.setBounds(100, 100, 200, 50);
+        encryptionButton.setBounds(100, 100, 210, 40);
         panel.add(encryptionButton);
 
         
@@ -175,7 +175,7 @@ public class MainApp extends Component {
 
 
         JButton decryptionButton = new JButton("Расшифрование");
-        decryptionButton.setBounds(100, 170, 200, 50);
+        decryptionButton.setBounds(100, 170, 210, 40);
         panel.add(decryptionButton);
 
         decryptionButton.addActionListener(new ActionListener(){
@@ -188,7 +188,63 @@ public class MainApp extends Component {
                 });
             }
         });
-        
+
+        JButton integrityButton = new JButton("Контроль целостности");
+        integrityButton.setBounds(100, 240, 210, 40);
+        panel.add(integrityButton);
+
+        integrityButton.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                FileCheckerWindow integrityChecker = new FileCheckerWindow();
+                integrityChecker.checkFileIntegrity();
+            });
+        });
+
+        JButton makeSign = new JButton("Сформировать подпись");
+        makeSign.setBounds(100, 310, 210, 40);
+        panel.add(makeSign);
+
+        makeSign.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                ForSignWindow forSignWindow = new ForSignWindow();
+                forSignWindow.createSignature();
+            });
+        });
+
+        JButton makeSignFile = new JButton("Подписать файл");
+        makeSignFile.setBounds(100, 380, 210, 40);
+        panel.add(makeSignFile);
+
+        makeSignFile.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                ForSignWindow forSignWindow = new ForSignWindow();
+                forSignWindow.signFile();
+            });
+        });
+
+        JButton checkSignFile = new JButton("Проверить подпись файла");
+        checkSignFile.setBounds(100, 450, 210, 40);
+        panel.add(checkSignFile);
+
+        checkSignFile.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                ForSignWindow forSignWindow = new ForSignWindow();
+                forSignWindow.verifySignature();
+            });
+        });
+
+        JButton hash = new JButton("Хешировать файл");
+        hash.setBounds(100, 520, 210, 40);
+        panel.add(hash);
+
+        hash.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                HashModeWindow hashModeWindow = new HashModeWindow();
+                hashModeWindow.setVisible(true);
+            });
+        });
+
+
         mainFrame.setVisible(true);
     }
 }

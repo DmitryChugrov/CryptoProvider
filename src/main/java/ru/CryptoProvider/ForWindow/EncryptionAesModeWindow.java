@@ -50,7 +50,7 @@ public class EncryptionAesModeWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
-                        "Вы выбрали режим ECB. В конце шифрования запомните ключ!",
+                        "Вы выбрали режим ECB (подходит для шифрования мелких файлов). В конце шифрования запомните ключ!",
                         "Информация", JOptionPane.INFORMATION_MESSAGE);
 
                 
@@ -275,7 +275,7 @@ public class EncryptionAesModeWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
-                        "Вы выбрали режим CBC. В конце шифрования запомните ключ!",
+                        "Вы выбрали режим CBC (подходит для шифрования крупных файлов). В конце шифрования запомните ключ!",
                         "Информация", JOptionPane.INFORMATION_MESSAGE);
 
 

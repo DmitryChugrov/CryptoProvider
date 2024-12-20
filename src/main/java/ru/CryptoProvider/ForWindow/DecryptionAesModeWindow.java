@@ -50,7 +50,7 @@ public class DecryptionAesModeWindow extends JFrame {
                         "Вы выбрали режим ECB. Укажите ключ для расшифровки!",
                         "Информация", JOptionPane.INFORMATION_MESSAGE);
 
-                // Выбор способа ввода ключа
+                
                 Object[] options = {"Ввести ключ вручную", "Загрузить ключ из файла"};
                 int choice = JOptionPane.showOptionDialog(
                         DecryptionAesModeWindow.this,
@@ -65,20 +65,20 @@ public class DecryptionAesModeWindow extends JFrame {
 
                 String key = null;
 
-                if (choice == 0) { // Ввод ключа вручную
+                if (choice == 0) { 
                     JPanel keyPanel = new JPanel();
                     keyPanel.setLayout(new BoxLayout(keyPanel, BoxLayout.Y_AXIS));
 
                     JPasswordField keyField = new JPasswordField(20);
                     JButton showKeyButton = new JButton("Показать ключ");
 
-                    // Добавляем слушатель для кнопки "Показать ключ"
+                    
                     showKeyButton.addActionListener(ex -> {
                         if (keyField.getEchoChar() == (char) 0) {
-                            keyField.setEchoChar('*');  // Скрыть ключ
+                            keyField.setEchoChar('*');  
                             showKeyButton.setText("Показать ключ");
                         } else {
-                            keyField.setEchoChar((char) 0);  // Показать ключ
+                            keyField.setEchoChar((char) 0);  
                             showKeyButton.setText("Скрыть ключ");
                         }
                     });
@@ -96,7 +96,7 @@ public class DecryptionAesModeWindow extends JFrame {
                     );
 
                     if (option != JOptionPane.OK_OPTION) {
-                        return; // Выход, если пользователь отменил
+                        return; 
                     }
 
                     key = new String(keyField.getPassword()).trim();
@@ -115,7 +115,7 @@ public class DecryptionAesModeWindow extends JFrame {
                         return;
                     }
 
-                } else if (choice == 1) { // Загрузка ключа из файла
+                } else if (choice == 1) { 
                     File keyFile = FileUtils.selectFile("Выберите файл ключа (.key)");
                     if (keyFile == null) {
                         JOptionPane.showMessageDialog(DecryptionAesModeWindow.this,
@@ -125,7 +125,7 @@ public class DecryptionAesModeWindow extends JFrame {
                     }
 
                     try {
-                        // Чтение зашифрованного ключа из файла
+                        
                         String encryptedKey = FileUtils.readFileToString(keyFile, StandardCharsets.UTF_8);
 
                         JPanel passwordPanel = new JPanel();
@@ -134,13 +134,13 @@ public class DecryptionAesModeWindow extends JFrame {
                         JPasswordField passwordField = new JPasswordField(20);
                         JButton showPasswordButton = new JButton("Показать пароль");
 
-                        // Добавляем слушатель для кнопки "Показать пароль"
+                        
                         showPasswordButton.addActionListener(ex -> {
                             if (passwordField.getEchoChar() == (char) 0) {
-                                passwordField.setEchoChar('*');  // Скрыть пароль
+                                passwordField.setEchoChar('*');  
                                 showPasswordButton.setText("Показать пароль");
                             } else {
-                                passwordField.setEchoChar((char) 0);  // Показать пароль
+                                passwordField.setEchoChar((char) 0);  
                                 showPasswordButton.setText("Скрыть пароль");
                             }
                         });
@@ -158,7 +158,7 @@ public class DecryptionAesModeWindow extends JFrame {
                         );
 
                         if (passwordOption != JOptionPane.OK_OPTION) {
-                            return; // Выход, если пользователь отменил
+                            return; 
                         }
 
                         String password = new String(passwordField.getPassword()).trim();
@@ -170,7 +170,7 @@ public class DecryptionAesModeWindow extends JFrame {
                             return;
                         }
 
-                        // Расшифровка ключа с использованием пароля
+                        
                         key = KeyGeneratorUtils.decryptKeyWithPassword(encryptedKey, password);
 
                     } catch (Exception ex) {
@@ -187,10 +187,10 @@ public class DecryptionAesModeWindow extends JFrame {
                         return;
                     }
                 } else {
-                    return; // Пользователь закрыл окно выбора
+                    return; 
                 }
 
-                // Остальная логика обработки расшифровки остаётся без изменений
+                
                 File[] encryptedFiles = FileUtils.selectMultipleFiles("Выберите файлы для расшифровки");
                 if (encryptedFiles == null || encryptedFiles.length == 0) {
                     JOptionPane.showMessageDialog(DecryptionAesModeWindow.this,
@@ -286,7 +286,7 @@ public class DecryptionAesModeWindow extends JFrame {
                         "Вы выбрали режим CBC. Укажите ключ для расшифровки!",
                         "Информация", JOptionPane.INFORMATION_MESSAGE);
 
-                // Выбор способа ввода ключа
+                
                 Object[] options = {"Ввести ключ вручную", "Загрузить ключ из файла"};
                 int choice = JOptionPane.showOptionDialog(
                         DecryptionAesModeWindow.this,
@@ -301,20 +301,20 @@ public class DecryptionAesModeWindow extends JFrame {
 
                 String key = null;
 
-                if (choice == 0) { // Ввод ключа вручную
+                if (choice == 0) { 
                     JPanel keyPanel = new JPanel();
                     keyPanel.setLayout(new BoxLayout(keyPanel, BoxLayout.Y_AXIS));
 
                     JPasswordField keyField = new JPasswordField(20);
                     JButton showKeyButton = new JButton("Показать ключ");
 
-                    // Добавляем слушатель для кнопки "Показать ключ"
+                    
                     showKeyButton.addActionListener(ex -> {
                         if (keyField.getEchoChar() == (char) 0) {
-                            keyField.setEchoChar('*');  // Скрыть ключ
+                            keyField.setEchoChar('*');  
                             showKeyButton.setText("Показать ключ");
                         } else {
-                            keyField.setEchoChar((char) 0);  // Показать ключ
+                            keyField.setEchoChar((char) 0);  
                             showKeyButton.setText("Скрыть ключ");
                         }
                     });
@@ -332,7 +332,7 @@ public class DecryptionAesModeWindow extends JFrame {
                     );
 
                     if (option != JOptionPane.OK_OPTION) {
-                        return; // Выход, если пользователь отменил
+                        return; 
                     }
 
                     key = new String(keyField.getPassword()).trim();
@@ -351,7 +351,7 @@ public class DecryptionAesModeWindow extends JFrame {
                         return;
                     }
 
-                } else if (choice == 1) { // Загрузка ключа из файла
+                } else if (choice == 1) { 
                     File keyFile = FileUtils.selectFile("Выберите файл ключа (.key)");
                     if (keyFile == null) {
                         JOptionPane.showMessageDialog(DecryptionAesModeWindow.this,
@@ -361,7 +361,7 @@ public class DecryptionAesModeWindow extends JFrame {
                     }
 
                     try {
-                        // Чтение зашифрованного ключа из файла
+                        
                         String encryptedKey = FileUtils.readFileToString(keyFile, StandardCharsets.UTF_8);
 
                         JPanel passwordPanel = new JPanel();
@@ -370,13 +370,13 @@ public class DecryptionAesModeWindow extends JFrame {
                         JPasswordField passwordField = new JPasswordField(20);
                         JButton showPasswordButton = new JButton("Показать пароль");
 
-                        // Добавляем слушатель для кнопки "Показать пароль"
+                        
                         showPasswordButton.addActionListener(ex -> {
                             if (passwordField.getEchoChar() == (char) 0) {
-                                passwordField.setEchoChar('*');  // Скрыть пароль
+                                passwordField.setEchoChar('*');  
                                 showPasswordButton.setText("Показать пароль");
                             } else {
-                                passwordField.setEchoChar((char) 0);  // Показать пароль
+                                passwordField.setEchoChar((char) 0);  
                                 showPasswordButton.setText("Скрыть пароль");
                             }
                         });
@@ -394,7 +394,7 @@ public class DecryptionAesModeWindow extends JFrame {
                         );
 
                         if (passwordOption != JOptionPane.OK_OPTION) {
-                            return; // Выход, если пользователь отменил
+                            return; 
                         }
 
                         String password = new String(passwordField.getPassword()).trim();
@@ -406,7 +406,7 @@ public class DecryptionAesModeWindow extends JFrame {
                             return;
                         }
 
-                        // Расшифровка ключа с использованием пароля
+                        
                         key = KeyGeneratorUtils.decryptKeyWithPassword(encryptedKey, password);
 
                     } catch (Exception ex) {
@@ -423,10 +423,10 @@ public class DecryptionAesModeWindow extends JFrame {
                         return;
                     }
             } else {
-                    return; // Пользователь закрыл окно выбора
+                    return; 
                 }
 
-                // Остальная логика обработки расшифровки остаётся без изменений
+                
                 File[] encryptedFiles = FileUtils.selectMultipleFiles("Выберите файлы для расшифровки");
                 if (encryptedFiles == null || encryptedFiles.length == 0) {
                     JOptionPane.showMessageDialog(DecryptionAesModeWindow.this,
