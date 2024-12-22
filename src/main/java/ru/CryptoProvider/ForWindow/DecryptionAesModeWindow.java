@@ -489,7 +489,7 @@ public class DecryptionAesModeWindow extends JFrame {
                     SwingUtilities.invokeLater(() -> {
                         StringBuilder resultMessage = new StringBuilder();
                         resultMessage.append("<html>Расшифровка завершена!<br>")
-                                .append("Успешно расшифровано файлов: ").append(successCount[0]).append("<br>")
+                                .append("Успешно расшифровано файлов: ").append(successCount).append("<br>")
                                 .append("Не удалось расшифровать: ").append(failedFiles.size()).append("<br>");
 
                         if (!failedFiles.isEmpty()) {

@@ -140,8 +140,7 @@ public class EncryptionAesModeWindow extends JFrame {
                             }
 
                             resultMessage.append("Общее время шифрования: ")
-                                    .append(totalTime).append(" ms<br>")
-                                    .append("Ключ: <b>").append(keyHash).append("</b></html>");
+                                    .append(totalTime).append(" ms<br>");
 
                             System.out.println(keyHash);
 
@@ -215,8 +214,8 @@ public class EncryptionAesModeWindow extends JFrame {
                                 try {
                                     containerKey = FileUtils.readFileToString(keyFile, StandardCharsets.UTF_8);
                                     containerPassphrase = KeyGeneratorUtils.generateKeyFromPassphrase(containerPassphrase);
-                                    System.out.println(containerPassphrase);
-                                    System.out.println(containerKey);
+//                                    System.out.println(containerPassphrase);
+//                                    System.out.println(containerKey);
                                     if (!KeyGeneratorUtils.verifyKey(containerPassphrase, containerKey)) {
                                         JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
                                                 "Неверный пароль для криптоконтейнера.",
@@ -233,7 +232,7 @@ public class EncryptionAesModeWindow extends JFrame {
                                 String encryptedKey;
                                 try {
                                     encryptedKey = KeyGeneratorUtils.encryptWithPassword(keyHash, containerPassphrase);
-                                    System.out.println(encryptedKey);
+//                                    System.out.println(encryptedKey);
                                 } catch (Exception ex) {
                                     JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
                                             "Ошибка шифрования ключа: " + ex.getMessage(),
@@ -368,8 +367,7 @@ public class EncryptionAesModeWindow extends JFrame {
                             }
 
                             resultMessage.append("Общее время шифрования: ")
-                                    .append(totalTime).append(" ms<br>")
-                                    .append("Ключ: <b>").append(keyHash).append("</b></html>");
+                                    .append(totalTime).append(" ms<br>");
 
 
                             JPanel panel = new JPanel(new BorderLayout());
@@ -441,8 +439,8 @@ public class EncryptionAesModeWindow extends JFrame {
                                 try {
                                     containerKey = FileUtils.readFileToString(keyFile, StandardCharsets.UTF_8);
                                     containerPassphrase = KeyGeneratorUtils.generateKeyFromPassphrase(containerPassphrase);
-                                    System.out.println(containerPassphrase);
-                                    System.out.println(containerKey);
+//                                    System.out.println(containerPassphrase);
+//                                    System.out.println(containerKey);
                                     if (!KeyGeneratorUtils.verifyKey(containerPassphrase, containerKey)) {
                                         JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
                                                 "Неверный пароль для криптоконтейнера.",
@@ -459,7 +457,7 @@ public class EncryptionAesModeWindow extends JFrame {
                                 String encryptedKey;
                                 try {
                                     encryptedKey = KeyGeneratorUtils.encryptWithPassword(keyHash, password);
-                                    System.out.println(encryptedKey);
+//                                    System.out.println(encryptedKey);
                                 } catch (Exception ex) {
                                     JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
                                             "Ошибка шифрования ключа: " + ex.getMessage(),

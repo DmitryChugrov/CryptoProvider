@@ -203,12 +203,12 @@ public class EncryptionModeWindow extends JFrame {
                                 String containerPassphrase = new String(passwordChars);
                                 
                                 try {
-                                    File keyFile = new File(containerFolder, "public.key");
+                                    File keyFile = new File(containerFolder, inputFiles[0]+"_Public.key");
                                     FileWriter writer = new FileWriter(keyFile);
                                     writer.write(String.valueOf(publicKey));
                                     writer.close();
 
-                                    keyFile = new File(containerFolder, "private.key");
+                                    keyFile = new File(containerFolder, inputFiles[0]+"_Private.key");
                                     writer = new FileWriter(keyFile);
                                     writer.write(String.valueOf(privateKey));
                                     writer.close();

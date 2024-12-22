@@ -6,7 +6,7 @@ import java.awt.*;
 public class SplashWindow extends JFrame {
     public SplashWindow() {
         setUndecorated(true);
-        JLabel splashLabel = new JLabel(new ImageIcon(SplashWindow.class.getResource("/images/Криптопровайдер.png"))); // Укажите путь к вашей картинке
+        JLabel splashLabel = new JLabel(new ImageIcon(SplashWindow.class.getResource("/images/Криптопровайдер.png")));
         getContentPane().add(splashLabel);
         setSize(1152, 647);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

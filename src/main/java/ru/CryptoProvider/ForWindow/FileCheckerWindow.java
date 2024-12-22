@@ -2,6 +2,9 @@ package ru.CryptoProvider.ForWindow;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,8 +18,19 @@ public class FileCheckerWindow {
         }
         return null;
     }
+    private String calculatePathHash(File file) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] pathBytes = file.getAbsolutePath().getBytes(StandardCharsets.UTF_8);
+        byte[] hashBytes = digest.digest(pathBytes);
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hashBytes) {
+            hexString.append(String.format("%02x", b));
+        }
+        return hexString.toString();
+    }
 
-    
+
+
     private String calculateFileHash(File file) throws NoSuchAlgorithmException, IOException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -34,15 +48,16 @@ public class FileCheckerWindow {
         return hexString.toString();
     }
 
-    
-    private void saveHashToFile(File file, String hash, File hashFile) throws IOException {
+
+    private void saveHashToFile(File file, String pathHash, String contentHash, File hashFile) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(hashFile, true))) {
-            writer.write(file.getName() + " : " + hash);
+            writer.write(pathHash + " : " + contentHash);
             writer.newLine();
         }
     }
 
-    
+
+
     private String getHashFromFile(File file, File hashFile) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(hashFile))) {
             String line;
@@ -54,34 +69,58 @@ public class FileCheckerWindow {
         }
         return null; 
     }
+    private String getHashFromFile(String pathHash, File hashFile) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(hashFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(pathHash)) {
+                    return line;
+                }
+            }
+        }
+        return null;
+    }
+    private File prepareHashFile() throws IOException {
+        File hashFile = new File("hashes.txt"); // Копируем ресурс в рабочую директорию
+        if (!hashFile.exists()) {
+            try (InputStream resourceStream = getClass().getResourceAsStream("/hashes.txt")) {
+                if (resourceStream == null) {
+                    throw new FileNotFoundException("Файл hashes.txt не найден в ресурсах.");
+                }
+                Files.copy(resourceStream, hashFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        return hashFile;
+    }
 
-    
+
+
     public void checkFileIntegrity() {
         File selectedFile = selectFile();
         if (selectedFile == null) {
-            return; 
+            return;
         }
-
-        File hashFile = new File("hashes.txt");
 
         try {
-            String currentHash = calculateFileHash(selectedFile);
-            String storedHash = getHashFromFile(selectedFile, hashFile);
+            File hashFile = prepareHashFile(); // Готовим файл хешей из ресурсов
+            String pathHash = calculatePathHash(selectedFile);
+            String contentHash = calculateFileHash(selectedFile);
+            String storedData = getHashFromFile(pathHash, hashFile);
 
-            if (storedHash == null) {
-                
-                saveHashToFile(selectedFile, currentHash, hashFile);
-                JOptionPane.showMessageDialog(null, "Хеш-сумма для файла " + selectedFile.getName() + " зарегистрирована в криптопровайдере.", "Информация", JOptionPane.INFORMATION_MESSAGE);
-            } else if (!currentHash.equals(storedHash)) {
-                
-                JOptionPane.showMessageDialog(null, "Целостность файла нарушена!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            if (storedData == null) {
+                saveHashToFile(selectedFile, pathHash, contentHash, hashFile);
+                JOptionPane.showMessageDialog(null, "Хеши пути и содержимого файла зарегистрированы.", "Информация", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                
-                JOptionPane.showMessageDialog(null, "Целостность файла не нарушена.", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                String[] storedHashes = storedData.split(" : ");
+                if (!storedHashes[1].equals(contentHash)) {
+                    JOptionPane.showMessageDialog(null, "Целостность содержимого файла нарушена!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Целостность файла не нарушена.", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         } catch (NoSuchAlgorithmException | IOException e) {
-            JOptionPane.showMessageDialog(null, "Ошибка при вычислении хеш-суммы файла: " + e.getMessage(),
-                    "Ошибка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Ошибка: " + e.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

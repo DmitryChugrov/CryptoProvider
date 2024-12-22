@@ -39,9 +39,9 @@ public class MouseTrackerLogic {
 
             
             StringBuilder hashString = new StringBuilder();
-            for (byte b : hashBytes) {
-                hashString.append(String.format("%02x", b));
-            }
+//            for (byte b : hashBytes) {
+//                hashString.append(String.format("%02x", b));
+//            }
             trackingComplete = true; 
             return hashString.toString(); 
         } catch (NoSuchAlgorithmException e) {

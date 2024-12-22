@@ -17,7 +17,7 @@ public class FileUtils {
 
     public static File selectSaveLocation(String defaultName) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Save File");
+        chooser.setDialogTitle("Сохранить файл");
         chooser.setSelectedFile(new File(defaultName));
         int result = chooser.showSaveDialog(null);
         return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile() : null;
