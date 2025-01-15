@@ -79,6 +79,7 @@ public class EncryptionModeWindow extends JFrame {
 
                 new Thread(() -> {
                     trackerWindow.waitForTrackingToComplete();
+                    trackerWindow.setVisible(false);
                     KeyPair keyPair = null;
                     try {
                         keyPair = generateRSAKeyPair();
@@ -97,26 +98,44 @@ public class EncryptionModeWindow extends JFrame {
                         return;
                     }
 
-                    
+                    JDialog progressDialog = new JDialog(EncryptionModeWindow.this, "Шифрование файлов", true);
+                    progressDialog.setLayout(new BorderLayout());
+                    JProgressBar progressBar = new JProgressBar(0, inputFiles.length);
+                    progressBar.setValue(0);
+                    progressDialog.add(new JLabel("Шифрование выполняется..."), BorderLayout.NORTH);
+                    progressDialog.add(progressBar, BorderLayout.CENTER);
+                    progressDialog.setSize(300, 100);
+                    progressDialog.setLocationRelativeTo(EncryptionModeWindow.this);
+
+                    SwingUtilities.invokeLater(() -> progressDialog.setVisible(true));
+
                     new Thread(() -> {
                         long totalEncryptionTime = 0;
                         final int[] successCount = {0};
                         List<String> failedFiles = new ArrayList<>();
 
-                        for (File inputFile : inputFiles) {
-                            File saveFile = new File(saveFolder, inputFile.getName() + ".enc");
+                        for (int i = 0; i < inputFiles.length; i++) {
+                            File inputFile = inputFiles[i];
+                            String baseName = inputFile.getName();
+                            String originalExtension = "";
+
+                            int dotIndex = baseName.lastIndexOf(".");
+                            if (dotIndex != -1) {
+                                originalExtension = baseName.substring(dotIndex);
+                                baseName = baseName.substring(0, dotIndex);
+                            }
+
+                            File saveFile = FileUtils.getUniqueFileENC(saveFolder, baseName, originalExtension);
 
                             try {
-                                
                                 long encryptionTime = RsaEncryption.encryptFileRSA(inputFile, saveFile, publicKey);
                                 totalEncryptionTime += encryptionTime;
                                 successCount[0]++;
-                            } catch (Exception ex) {
-                                
-                                String errorMessage = "Не удалось зашифровать файл " + inputFile.getName() + ": " + ex.getMessage();
-                                failedFiles.add(errorMessage);  
-                                ex.printStackTrace();  
+                            }  catch (Exception ex) {
+                                failedFiles.add(inputFile.getName());
                             }
+                            final int progress = i + 1;
+                            SwingUtilities.invokeLater(() -> progressBar.setValue(progress));
                         }
 
                         long finalTotalEncryptionTime = totalEncryptionTime;
@@ -140,13 +159,22 @@ public class EncryptionModeWindow extends JFrame {
                             JPanel panel = new JPanel(new BorderLayout());
                             JLabel resultLabel = new JLabel(resultMessage.toString());
                             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                            JButton copyPublicKeyButton = new JButton("Копировать публичный ключ");
 
+                            JButton copyPublicKeyButton = new JButton("Копировать публичный ключ");
                             copyPublicKeyButton.addActionListener(copyEvent -> {
                                 Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
                                         new StringSelection(String.valueOf(publicKey)), null);
                                 JOptionPane.showMessageDialog(EncryptionModeWindow.this,
                                         "Публичный ключ скопирован в буфер обмена!",
+                                        "Успех", JOptionPane.INFORMATION_MESSAGE);
+                            });
+
+                            JButton copyPrivateKeyButton = new JButton("Копировать приватный ключ");
+                            copyPublicKeyButton.addActionListener(copyEvent -> {
+                                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                                        new StringSelection(String.valueOf(privateKey)), null);
+                                JOptionPane.showMessageDialog(EncryptionModeWindow.this,
+                                        "Приватный ключ скопирован в буфер обмена!",
                                         "Успех", JOptionPane.INFORMATION_MESSAGE);
                             });
 
@@ -223,7 +251,7 @@ public class EncryptionModeWindow extends JFrame {
                                             "Ошибка", JOptionPane.ERROR_MESSAGE);
                                 }
                             });
-
+                            buttonPanel.add(copyPrivateKeyButton);
                             buttonPanel.add(copyPublicKeyButton);
                             buttonPanel.add(saveKeyButton);
                             panel.add(resultLabel, BorderLayout.CENTER);
@@ -233,7 +261,6 @@ public class EncryptionModeWindow extends JFrame {
                                     panel, "Результаты шифрования", JOptionPane.INFORMATION_MESSAGE);
                         });
                     }).start();
-
                 }).start();
             }
         });

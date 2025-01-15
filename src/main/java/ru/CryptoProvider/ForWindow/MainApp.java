@@ -2,6 +2,7 @@ package ru.CryptoProvider.ForWindow;
 
 import ru.CryptoProvider.Utils.FileUtils;
 import ru.CryptoProvider.Utils.KeyGeneratorUtils;
+import ru.CryptoProvider.Utils.PasswordChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,58 +55,81 @@ public class MainApp extends Component {
                                                                   "Ошибка", JOptionPane.ERROR_MESSAGE);
                                                           return;
                                                       }
+                                                      String passphrase;
+                                                      while (true) {
+                                                          JPanel passwordPanel = new JPanel(new BorderLayout());
+                                                          JPasswordField passwordField = new JPasswordField(20);
+                                                          JCheckBox showPasswordCheckbox = new JCheckBox("Показать пароль");
 
-                                                      
-                                                      JPanel passwordPanel = new JPanel(new BorderLayout());
-                                                      JPasswordField passwordField = new JPasswordField(20);
-                                                      JCheckBox showPasswordCheckbox = new JCheckBox("Показать пароль");
+                                                          passwordPanel.add(passwordField, BorderLayout.CENTER);
+                                                          passwordPanel.add(showPasswordCheckbox, BorderLayout.SOUTH);
 
-                                                      passwordPanel.add(passwordField, BorderLayout.CENTER);
-                                                      passwordPanel.add(showPasswordCheckbox, BorderLayout.SOUTH);
+                                                          showPasswordCheckbox.addActionListener(ev -> {
+                                                              if (showPasswordCheckbox.isSelected()) {
+                                                                  passwordField.setEchoChar((char) 0);
+                                                              } else {
+                                                                  passwordField.setEchoChar('•');
+                                                              }
+                                                          });
 
-                                                      
-                                                      showPasswordCheckbox.addActionListener(ev -> {
-                                                          if (showPasswordCheckbox.isSelected()) {
-                                                              passwordField.setEchoChar((char) 0); 
-                                                          } else {
-                                                              passwordField.setEchoChar('•'); 
+                                                          int result = JOptionPane.showConfirmDialog(
+                                                                  MainApp.this,
+                                                                  passwordPanel,
+                                                                  "Введите парольную фразу для криптоконтейнера",
+                                                                  JOptionPane.OK_CANCEL_OPTION,
+                                                                  JOptionPane.PLAIN_MESSAGE);
+
+                                                          if (result != JOptionPane.OK_OPTION) {
+                                                              JOptionPane.showMessageDialog(
+                                                                      MainApp.this,
+                                                                      "Операция отменена.",
+                                                                      "Информация", JOptionPane.INFORMATION_MESSAGE);
+                                                              return;
                                                           }
-                                                      });
 
-                                                      int result = JOptionPane.showConfirmDialog(
-                                                              MainApp.this,
-                                                              passwordPanel,
-                                                              "Введите парольную фразу для криптоконтейнера",
-                                                              JOptionPane.OK_CANCEL_OPTION,
-                                                              JOptionPane.PLAIN_MESSAGE);
+                                                          passphrase = new String(passwordField.getPassword());
 
-                                                      if (result != JOptionPane.OK_OPTION) {
+                                                          if (passphrase.trim().isEmpty()) {
+                                                              JOptionPane.showMessageDialog(
+                                                                      MainApp.this,
+                                                                      "Парольная фраза не может быть пустой.",
+                                                                      "Ошибка", JOptionPane.ERROR_MESSAGE);
+                                                              continue;
+                                                          }
+
+                                                          if (passphrase.length() < 8) {
+                                                              JOptionPane.showMessageDialog(
+                                                                      MainApp.this,
+                                                                      "Парольная фраза должна быть длиной не менее 8 символов.",
+                                                                      "Ошибка", JOptionPane.WARNING_MESSAGE);
+                                                              continue;
+                                                          }
+
+                                                          PasswordChecker strength = PasswordChecker.assess(passphrase);
+                                                          if (strength == PasswordChecker.WEAK) {
+                                                              JOptionPane.showMessageDialog(
+                                                                      MainApp.this,
+                                                                      "Пароль слишком слабый. Попробуйте снова, используя буквы, цифры и специальные символы.",
+                                                                      "Ошибка", JOptionPane.WARNING_MESSAGE);
+                                                              continue;
+                                                          } else if (strength == PasswordChecker.MEDIUM) {
+                                                              int confirm = JOptionPane.showConfirmDialog(
+                                                                      MainApp.this,
+                                                                      "Пароль средней сложности. Вы уверены, что хотите продолжить?",
+                                                                      "Предупреждение",
+                                                                      JOptionPane.YES_NO_OPTION,
+                                                                      JOptionPane.WARNING_MESSAGE);
+                                                              if (confirm != JOptionPane.YES_OPTION) {
+                                                                  continue;
+                                                              }
+                                                          }
+
                                                           JOptionPane.showMessageDialog(
                                                                   MainApp.this,
-                                                                  "Операция отменена.",
+                                                                  "Пароль принят.",
                                                                   "Информация", JOptionPane.INFORMATION_MESSAGE);
-                                                          return;
+                                                          break;
                                                       }
-
-                                                      String passphrase = new String(passwordField.getPassword());
-
-                                                      if (passphrase.trim().isEmpty()) {
-                                                          JOptionPane.showMessageDialog(
-                                                                  MainApp.this,
-                                                                  "Парольная фраза не может быть пустой.",
-                                                                  "Ошибка", JOptionPane.ERROR_MESSAGE);
-                                                          return;
-                                                      }
-
-                                                      if (passphrase.length() < 8) {
-                                                          JOptionPane.showMessageDialog(
-                                                                  MainApp.this,
-                                                                  "Парольная фраза должна быть длиной не менее 8 символов.",
-                                                                  "Ошибка", JOptionPane.WARNING_MESSAGE);
-                                                          return;
-                                                      }
-
-                                                      
                                                       File parentFolder = FileUtils.selectFolder("Выберите место для создания криптоконтейнера");
                                                       if (parentFolder == null) {
                                                           JOptionPane.showMessageDialog(

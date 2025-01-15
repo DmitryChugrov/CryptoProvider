@@ -50,7 +50,7 @@ public class EncryptionAesModeWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
-                        "Вы выбрали режим ECB (подходит для шифрования мелких файлов). В конце шифрования запомните ключ!",
+                        "Вы выбрали режим ECB (подходит для шифрования мелких файлов не более 20 МБ). В конце шифрования запомните ключ!",
                         "Информация", JOptionPane.INFORMATION_MESSAGE);
 
                 
@@ -90,7 +90,7 @@ public class EncryptionAesModeWindow extends JFrame {
                     trackerWindow.waitForTrackingToComplete();
                     String keyHash = trackerWindow.getTrackerLogic().hashSumOfCoordinates();
 
-                    
+                    trackerWindow.setVisible(false);
                     JDialog progressDialog = new JDialog(EncryptionAesModeWindow.this, "Шифрование файлов", true);
                     progressDialog.setLayout(new BorderLayout());
                     JProgressBar progressBar = new JProgressBar(0, inputFiles.length);
@@ -107,8 +107,16 @@ public class EncryptionAesModeWindow extends JFrame {
 
                         for (int i = 0; i < inputFiles.length; i++) {
                             File inputFile = inputFiles[i];
-                            File saveFile = new File(saveFolder, inputFile.getName() + ".enc");
+                            String baseName = inputFile.getName();
+                            String originalExtension = "";
 
+                            int dotIndex = baseName.lastIndexOf(".");
+                            if (dotIndex != -1) {
+                                originalExtension = baseName.substring(dotIndex);
+                                baseName = baseName.substring(0, dotIndex);
+                            }
+
+                            File saveFile = FileUtils.getUniqueFileENC(saveFolder, baseName, originalExtension);
                             try {
                                 long encryptionTime = AesEncryptionECB.encryptFileECB(inputFile, saveFile, keyHash);
                                 totalEncryptionTime += encryptionTime;
@@ -142,7 +150,7 @@ public class EncryptionAesModeWindow extends JFrame {
                             resultMessage.append("Общее время шифрования: ")
                                     .append(totalTime).append(" ms<br>");
 
-                            System.out.println(keyHash);
+//                            System.out.println(keyHash);
 
                             JPanel panel = new JPanel(new BorderLayout());
                             JLabel resultLabel = new JLabel(resultMessage.toString());
@@ -274,7 +282,7 @@ public class EncryptionAesModeWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(EncryptionAesModeWindow.this,
-                        "Вы выбрали режим CBC (подходит для шифрования крупных файлов). В конце шифрования запомните ключ!",
+                        "Вы выбрали режим CBC (подходит для шифрования крупных файлов не более 1.2 ГБ). В конце шифрования запомните ключ!",
                         "Информация", JOptionPane.INFORMATION_MESSAGE);
 
 
@@ -316,6 +324,7 @@ public class EncryptionAesModeWindow extends JFrame {
                 new Thread(() -> {
                     trackerWindow.waitForTrackingToComplete();
                     String keyHash = trackerWindow.getTrackerLogic().hashSumOfCoordinates();
+                    trackerWindow.setVisible(false);
 
 
                     JDialog progressDialog = new JDialog(EncryptionAesModeWindow.this, "Шифрование файлов", true);
@@ -334,7 +343,16 @@ public class EncryptionAesModeWindow extends JFrame {
 
                         for (int i = 0; i < inputFiles.length; i++) {
                             File inputFile = inputFiles[i];
-                            File saveFile = new File(saveFolder, inputFile.getName() + ".enc");
+                            String baseName = inputFile.getName();
+                            String originalExtension = "";
+
+                            int dotIndex = baseName.lastIndexOf(".");
+                            if (dotIndex != -1) {
+                                originalExtension = baseName.substring(dotIndex);
+                                baseName = baseName.substring(0, dotIndex);
+                            }
+
+                            File saveFile = FileUtils.getUniqueFileENC(saveFolder, baseName, originalExtension);
 
                             try {
                                 long encryptionTime = AesEncryptionCBC.encryptFileCBC(inputFile, saveFile, keyHash);

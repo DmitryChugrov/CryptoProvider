@@ -231,7 +231,17 @@ public class DecryptionModeWindow extends JFrame {
 
                     for (int i = 0; i < encryptedFiles.length; i++) {
                         File encryptedFile = encryptedFiles[i];
-                        File saveFile = new File(saveFolder, encryptedFile.getName().replace(".enc", ""));
+
+                        String baseName = encryptedFile.getName().replace(".enc", "");
+                        String originalExtension = "";
+
+                        int dotIndex = baseName.lastIndexOf(".");
+                        if (dotIndex != -1) {
+                            originalExtension = baseName.substring(dotIndex);
+                            baseName = baseName.substring(0, dotIndex);
+                        }
+
+                        File saveFile = FileUtils.getUniqueFile(saveFolder, baseName, originalExtension);
 
                         try {
                             PrivateKey privateKey = RsaDecryption.getPrivateKeyFromString(finalKey);
@@ -252,7 +262,7 @@ public class DecryptionModeWindow extends JFrame {
                     SwingUtilities.invokeLater(() -> {
                         StringBuilder resultMessage = new StringBuilder();
                         resultMessage.append("<html>Расшифровка завершена!<br>")
-                                .append("Успешно расшифровано файлов: ").append(successCount).append("<br>")
+                                .append("Успешно расшифровано файлов: ").append(successCount[0]).append("<br>")
                                 .append("Не удалось расшифровать: ").append(failedFiles.size()).append("<br>");
 
                         if (!failedFiles.isEmpty()) {

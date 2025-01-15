@@ -43,6 +43,31 @@ public class FileUtils {
         }
         return Files.readString(file.toPath(), charset);
     }
+    public static File getUniqueFile(File folder, String baseName, String originalExtension) {
+        String extension = originalExtension;
+        File file = new File(folder, baseName + extension);
+        int counter = 1;
+
+        while (file.exists()) {
+            file = new File(folder, baseName + "(" + counter + ")" + extension);
+            counter++;
+        }
+        return file;
+    }
+
+    public static File getUniqueFileENC(File folder, String baseName, String originalExtension) {
+        String extension = originalExtension + ".enc";
+        File file = new File(folder, baseName + extension);
+        int counter = 1;
+
+        while (file.exists()) {
+            file = new File(folder, baseName + "(" + counter + ")" + extension);
+            counter++;
+        }
+        return file;
+    }
+
+
 
 }
 
